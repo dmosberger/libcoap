@@ -594,7 +594,7 @@ coap_show_pdu(coap_log_t level, const coap_pdu_t *pdu) {
 
       outbuflen = strlen(outbuf);
       snprintf(&outbuf[outbuflen], sizeof(outbuf)-outbuflen,
-               "binary data length %ld\n", data_len);
+               "binary data length %zu\n", data_len);
       COAP_DO_SHOW_OUTPUT_LINE; 
       /*
        * Output hex dump of binary data as a continuous entry
