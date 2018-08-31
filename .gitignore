@@ -7,7 +7,7 @@ Makefile.in
 aclocal.m4
 ar-lib
 autom4te.cache/
-coap_config.h*
+#coap_config.h*
 compile
 config.*
 configure
@@ -64,7 +64,7 @@ examples/coap-rd
 examples/coap-server
 
 # the include/ folder
-include/coap/coap.h
+#include/coap/coap.h
 
 # the tests/ folder
 tests/.deps
