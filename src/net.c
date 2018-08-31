@@ -1289,6 +1289,38 @@ coap_read(coap_context_t *ctx, coap_tick_t now) {
       coap_write_session(ctx, s, now);
   }
 }
+
+/* Caller must ensure s/he is holding a reference to the session
+   (coap_session_reference() before calling this function.  This is to
+   prevent a callback from deleting the session prematurely.  */
+void
+coap_handle_io(coap_session_t *s, coap_socket_flags_t status)
+{
+  coap_context_t *ctx = s->context;
+  coap_tick_t now;
+
+  if ((s->sock.flags & COAP_SOCKET_WANT_READ)
+      && (status & COAP_SOCKET_CAN_READ))
+    s->sock.flags |= COAP_SOCKET_CAN_READ;
+  if ((s->sock.flags & COAP_SOCKET_WANT_ACCEPT)
+      && (status & COAP_SOCKET_CAN_READ))
+    s->sock.flags |= COAP_SOCKET_CAN_ACCEPT;
+  if ((s->sock.flags & COAP_SOCKET_WANT_WRITE)
+      && (status & COAP_SOCKET_CAN_WRITE))
+    s->sock.flags |= COAP_SOCKET_CAN_WRITE;
+  if ((s->sock.flags & COAP_SOCKET_WANT_CONNECT)
+      && (status & COAP_SOCKET_CAN_WRITE))
+    s->sock.flags |= COAP_SOCKET_CAN_CONNECT;
+
+  coap_ticks(&now);
+  if ((s->sock.flags & COAP_SOCKET_CAN_CONNECT) != 0)
+    coap_connect_session(ctx, s, now);
+  if ((s->sock.flags & COAP_SOCKET_CAN_READ) != 0)
+    coap_read_session(ctx, s, now);
+  if ((s->sock.flags & COAP_SOCKET_CAN_WRITE) != 0)
+    coap_write_session(ctx, s, now);
+}
+
 #endif /* not WITH_LWIP */
 
 int

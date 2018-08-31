@@ -550,6 +550,13 @@ void coap_read(coap_context_t *ctx, coap_tick_t now);
 int coap_run_once( coap_context_t *ctx, unsigned int timeout_ms );
 
 /**
+ * Process pending network I/O for the specified session.
+ *
+ * @param session The CoAP session that has I/O pending
+ */
+void coap_handle_io(coap_session_t *session, coap_socket_flags_t flgs);
+
+/**
  * Parses and interprets a CoAP datagram with context @p ctx. This function
  * returns @c 0 if the datagram was handled, or a value less than zero on
  * error.
