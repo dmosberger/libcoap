@@ -8,11 +8,14 @@ LIBS = libcoap.a
 OFILES = address async block coap_event coap_io coap_notls \
 	coap_session coap_time debug encode mem net option \
 	pdu resource str subscribe uri
-LIBOBJS = $(foreach obj,$(OFILES),$O/$(obj).o)
+LIBOBJS = $(foreach obj,$(OFILES),$O/coap-$(obj).o)
 
 ifneq ($(PLATFORM),egauge2)
 PROGS	= coap-client
 endif
+
+$O/coap-%.o: %.c
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 TARGETS	= $(foreach prog,$(LIBS) $(PROGS),$O/$(prog))
 
